@@ -1,6 +1,7 @@
 import express from "express";
 import mysql from "mysql";
 import bcryptjs from "bcryptjs";
+import cors from "cors";
 
 const app = express();
 
@@ -71,10 +72,19 @@ app.post("/signup", (req, res) => {
   });
 });
 
-app.get("/", (req, res) => {
-  res.send("You are connected");
+// 10.0.2.16
+
+app.get("/transaction/:id", (req, res) => {
+  const id = req.params.id;
+
+  const sql = "SELECT * FROM transactions WHERE  user_id = ?";
+  con.query(sql, [id], (err, result) => {
+    if (err) return res.json({ Error: "Error in getting transaction" });
+    return res.json({ Status: "Success", result });
+  });
 });
 
-app.listen(3000, hostname, () => {
-  console.log("Connected to port 8081");
+const hostname = "192.168.66.71";
+app.listen(3000, hostname, (err) => {
+  console.log("Connected to port 3000");
 });

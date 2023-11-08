@@ -1,7 +1,6 @@
 import express from "express";
 import mysql from "mysql";
 import bcryptjs from "bcryptjs";
-import cors from "cors";
 
 const app = express();
 
@@ -24,6 +23,7 @@ con.connect((err) => {
 
 app.post("/login", (req, res) => {
   const sql = "SELECT * FROM bank_users WHERE email = ?";
+
   con.query(sql, [req.body.email], (err, result) => {
     if (err) {
       return res.json({ Status: "Error", Error: "Error in running query" });
@@ -36,17 +36,22 @@ app.post("/login", (req, res) => {
         (err, response) => {
           if (err) return res.json({ Error: "Password error" });
           if (response) {
-            return res.json({ Status: "Success" });
+            const { firstname, lastname, id, email } = result[0];
+            return res.json({
+              Status: "Success",
+              details: { firstname, lastname, id, email },
+            });
           } else {
             return res.json({
               Status: "Error",
-              Error: "Wrong Email or Password 0",
+              Error: "Wrong Email or Password",
             });
           }
         }
       );
     } else {
-      return res.json({ Status: "Error", Error: "Wrong Email or Password 1" });
+      console.log(err);
+      return res.json({ Status: "Error", Error: "Wrong Email or Password" });
     }
   });
 });
@@ -67,7 +72,7 @@ app.post("/signup", (req, res) => {
 
     con.query(sql, [values], (err, result) => {
       if (err) return res.json({ Error: "Inside signup query" });
-      return res.json({ Status: "Success" });
+      return res.json({ Status: "Success", id: result.insertId });
     });
   });
 });

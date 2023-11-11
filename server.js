@@ -1,6 +1,8 @@
-import express from "express";
-import mysql from "mysql";
-import bcryptjs from "bcryptjs";
+const express = require("express");
+const mysql = require("mysql");
+const bcryptjs = require("bcryptjs");
+
+require("dotenv").config();
 
 const app = express();
 
@@ -77,8 +79,6 @@ app.post("/signup", (req, res) => {
   });
 });
 
-// 10.0.2.16
-
 app.get("/transaction/:id", (req, res) => {
   const id = req.params.id;
 
@@ -89,7 +89,6 @@ app.get("/transaction/:id", (req, res) => {
   });
 });
 
-const hostname = "192.168.66.71";
-app.listen(3000, hostname, (err) => {
+app.listen(process.env.PORT, process.env.HOST, (err) => {
   console.log("Connected to port 3000");
 });

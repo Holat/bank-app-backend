@@ -38,10 +38,19 @@ app.post("/login", (req, res) => {
         (err, response) => {
           if (err) return res.json({ Error: "Password error" });
           if (response) {
-            const { firstname, lastname, id, email } = result[0];
+            const { firstname, lastname, id, email, savings, current, other } =
+              result[0];
             return res.json({
               Status: "Success",
-              details: { firstname, lastname, id, email },
+              details: {
+                firstname,
+                lastname,
+                id,
+                email,
+                savings,
+                current,
+                other,
+              },
             });
           } else {
             return res.json({
